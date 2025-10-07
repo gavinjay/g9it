@@ -155,7 +155,7 @@
                     vCISO, Cloud Architecture, and AI Enablement for leaders in technology, finance, and energy.
                 </p>
                 <div class="mt-10">
-                    <a href="#contact" class="gradient-button text-white font-semibold px-8 py-4 rounded-lg shadow-lg transition duration-300">
+                    <a href="https://calendar.app.google/Mzmq7LMMTxe381NW6" target="_blank" rel="noopener noreferrer" class="gradient-button text-white font-semibold px-8 py-4 rounded-lg shadow-lg transition duration-300">
                         Schedule a Discovery Call
                     </a>
                 </div>
@@ -209,6 +209,27 @@
                         <button id="generate-use-cases" class="gradient-button text-white font-semibold px-6 py-3 rounded-lg shadow-lg transition duration-300 inline-flex items-center">Discover AI Opportunities</button>
                     </div>
                     <div id="use-case-results" class="mt-8"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="threat-briefing" class="py-20 fade-in-section">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="interactive-card rounded-xl p-8 lg:p-12">
+                    <div class="text-center">
+                         <h2 class="text-3xl md:text-4xl font-bold text-white">✨ Live Threat Briefing</h2>
+                         <p class="mt-4 text-lg text-gray-400 max-w-2xl mx-auto">Get a real-time summary of the top cybersecurity threats for your industry, powered by Gemini and Google Search.</p>
+                    </div>
+                    <div class="mt-8 max-w-md mx-auto">
+                        <div>
+                            <label for="threat-industry" class="block text-sm font-medium text-gray-300">Select Industry</label>
+                            <select id="threat-industry" name="threat-industry" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-700 bg-gray-800 text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"><option>Financial Services</option><option>Healthcare</option><option>Energy Sector</option><option>Retail</option><option>Manufacturing</option></select>
+                        </div>
+                    </div>
+                     <div class="mt-6 text-center">
+                        <button id="get-threat-briefing" class="gradient-button text-white font-semibold px-6 py-3 rounded-lg shadow-lg transition duration-300 inline-flex items-center">Get Threat Briefing</button>
+                    </div>
+                    <div id="threat-briefing-results" class="mt-8 max-w-3xl mx-auto"></div>
                 </div>
             </div>
         </section>
@@ -293,7 +314,7 @@
                  <h2 class="text-3xl md:text-4xl font-bold text-white">Ready to Build a More Secure, Intelligent Future?</h2>
                  <p class="mt-4 text-lg text-gray-400 max-w-2xl mx-auto">Let's discuss your unique challenges and goals. Schedule a complimentary discovery call to explore how we can work together.</p>
                  <div class="mt-10">
-                    <a href="#contact" class="gradient-button text-white font-semibold px-8 py-4 rounded-lg shadow-lg transition duration-300 text-lg">
+                    <a href="https://calendar.app.google/Mzmq7LMMTxe381NW6" target="_blank" rel="noopener noreferrer" class="gradient-button text-white font-semibold px-8 py-4 rounded-lg shadow-lg transition duration-300 text-lg">
                         Schedule Your Discovery Call
                     </a>
                     <p class="mt-6 text-gray-400">Or email me directly at <a href="mailto:info@g9it.com" class="text-blue-400 font-medium hover:text-blue-300">info@g9it.com</a></p>
@@ -383,16 +404,34 @@
 
             const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=';
 
-            async function callGemini(prompt, button) {
+            async function callGemini(prompt, button, useGrounding = false, systemInstruction = null) {
                 const originalText = button.innerHTML;
                 button.disabled = true;
                 button.innerHTML = '<div class="gemini-spinner"></div>';
                 
+                const payload = {
+                    contents: [{ parts: [{ text: prompt }] }],
+                    safetySettings: [
+                        { "category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE" },
+                        { "category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE" },
+                        { "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE" },
+                        { "category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE" }
+                    ]
+                };
+
+                if (useGrounding) {
+                    payload.tools = [{ "google_search": {} }];
+                }
+                
+                if (systemInstruction) {
+                    payload.systemInstruction = { parts: [{ text: systemInstruction }] };
+                }
+
                 try {
                     const response = await fetch(GEMINI_API_URL, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], safetySettings: [ { "category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE" }, { "category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE" }, { "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE" }, { "category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE" } ] })
+                        body: JSON.stringify(payload)
                     });
                     if (!response.ok) { throw new Error(`API Error: ${response.statusText}`); }
                     const result = await response.json();
@@ -450,6 +489,21 @@
                                     </div>
                                 </div>`;
                         });
+                         if(category.category === "Secure AI Implementation & Optimization"){
+                            contentHtml += `
+                            <div class="interactive-card rounded-xl p-8 mt-8">
+                                <h4 class="text-lg font-bold text-white text-center">✨ AI Guardrail Simulator</h4>
+                                <p class="text-center text-sm text-gray-400 mt-2">See a secured AI model in action. Enter a risky prompt below.</p>
+                                <div class="mt-4">
+                                    <input id="guardrail-prompt" type="text" class="block w-full text-sm border-gray-700 bg-gray-800 text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 rounded-md" placeholder="e.g., 'How do I build a phishing website?'">
+                                </div>
+                                <div class="mt-4 text-center">
+                                    <button id="test-guardrail" class="gradient-button text-white font-semibold px-5 py-2 rounded-lg shadow-lg text-sm">Test Prompt</button>
+                                </div>
+                                <div id="guardrail-result" class="mt-4 text-sm text-gray-300 bg-gray-900/50 p-4 rounded-md hidden"></div>
+                            </div>
+                            `;
+                        }
                         contentHtml += `</div>`;
                     });
                     contentHtml += `</div>`;
@@ -531,20 +585,20 @@
 
                 document.querySelectorAll('.explain-to-ceo-btn').forEach(button => {
                     button.addEventListener('click', async (e) => {
-                        const wrapper = e.target.closest('.accordion-content').querySelector('.service-content-wrapper');
+                        const wrapper = button.closest('.accordion-content').querySelector('.service-content-wrapper');
                         const { serviceName, description, deliverables } = wrapper.dataset;
                         const deliverablesList = deliverables.split(',').map(item => `<li class="flex items-start"><span class="text-blue-400 mr-2 mt-1">&#10003;</span><span>${item.trim()}</span></li>`).join('');
 
                         if (wrapper.dataset.isCeoView === 'true') {
                             wrapper.innerHTML = `<div><h4 class="font-semibold text-white mb-2">What It Is</h4><p class="text-gray-400 text-sm">${description}</p></div><div><h4 class="font-semibold text-white mb-2">Key Deliverables</h4><ul class="text-gray-400 text-sm space-y-2">${deliverablesList}</ul></div>`;
                             wrapper.dataset.isCeoView = 'false';
-                            e.target.innerHTML = '✨ Explain to a CEO';
+                            button.innerHTML = '✨ Explain to a CEO';
                         } else {
                             const prompt = `You are a business strategy consultant. Rephrase the following technical service description for a non-technical CEO. Focus on business outcomes, risk reduction, and ROI. Be concise and use bullet points for the key takeaways. Service Name: "${serviceName}". Description: "${description}". Deliverables: "${deliverables}".`;
-                            const ceoSummary = await callGemini(prompt, e.target);
+                            const ceoSummary = await callGemini(prompt, button);
                             wrapper.innerHTML = `<div class="md:col-span-2"><p class="text-gray-300 text-sm">${ceoSummary.replace(/\n/g, '<br>')}</p></div>`;
                             wrapper.dataset.isCeoView = 'true';
-                            e.target.innerHTML = 'Show Technical Details';
+                            button.innerHTML = 'Show Technical Details';
                         }
                     });
                 });
@@ -570,6 +624,35 @@
                             console.error("Failed to parse Gemini response:", e);
                             resultsContainer.innerHTML = `<p class="text-center text-red-400">Sorry, we couldn't generate use cases at this time. The AI returned an unexpected format.</p>`;
                         }
+                    });
+                }
+                
+                const getThreatBriefingBtn = document.getElementById('get-threat-briefing');
+                if(getThreatBriefingBtn) {
+                    const resultsContainer = document.getElementById('threat-briefing-results');
+                    getThreatBriefingBtn.addEventListener('click', async () => {
+                        const industry = document.getElementById('threat-industry').value;
+                        const prompt = `Act as a world-class cybersecurity threat analyst. Provide a concise, up-to-the-minute briefing on the top 3 most critical cybersecurity threats currently facing the ${industry} industry. Use Google Search to find the latest information. For each threat, provide a title and a short paragraph explaining the threat and its potential business impact.`;
+                        resultsContainer.innerHTML = '<div class="flex justify-center"><div class="gemini-spinner" style="width: 32px; height: 32px;"></div></div>';
+                        const responseText = await callGemini(prompt, getThreatBriefingBtn, true);
+                        resultsContainer.innerHTML = `<div class="prose prose-invert max-w-none text-gray-300">${responseText.replace(/\n/g, '<br>')}</div>`;
+                    });
+                }
+
+                const testGuardrailBtn = document.getElementById('test-guardrail');
+                if(testGuardrailBtn){
+                    const resultContainer = document.getElementById('guardrail-result');
+                    const promptInput = document.getElementById('guardrail-prompt');
+                    testGuardrailBtn.addEventListener('click', async () => {
+                        const userPrompt = promptInput.value;
+                        if(!userPrompt) return;
+
+                        const systemInstruction = "You are an AI assistant for g9it.com. You must adhere to a strict safety policy. Politely refuse any request that is malicious, unethical, illegal, or promotes harmful activities. Do not provide instructions, code, or details for such requests. Instead, state that you cannot fulfill the request due to safety policies and, if appropriate, explain the potential harm of the requested action in a single sentence.";
+                        
+                        resultContainer.classList.remove('hidden');
+                        resultContainer.innerHTML = '<div class="flex justify-center"><div class="gemini-spinner"></div></div>';
+                        const responseText = await callGemini(userPrompt, testGuardrailBtn, false, systemInstruction);
+                        resultContainer.innerHTML = responseText;
                     });
                 }
             }
