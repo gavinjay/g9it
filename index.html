@@ -633,22 +633,57 @@
                         const industry = document.getElementById('industry').value;
                         const department = document.getElementById('department').value;
                         const prompt = `Act as an expert business and technology consultant. Generate 3 distinct and actionable use cases for Generative AI for the ${department} department in the ${industry} industry. For each use case, provide a title, a brief description of the business problem, and a proposed AI solution. Format the entire response as a single JSON array of objects, where each object has "title", "problem", and "solution" keys. Do not include any text outside of the JSON array.`;
+                        
                         resultsContainer.innerHTML = '<div class="flex justify-center"><div class="gemini-spinner" style="width: 32px; height: 32px;"></div></div>';
-                        const responseText = await callGemini(prompt, generateButton);
+                        
+                        // Call the Netlify function (this part is correct)
+                        // Note: callGemini now returns the *parsed JSON* { text: "..." } from the Netlify function, or throws an error
                         try {
-                            const useCases = JSON.parse(responseText);
+                            // Fetch the raw text response string from the Netlify function's body
+                            const response = await fetch('/.netlify/functions/call-gemini', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ prompt: prompt, useGrounding: false, systemInstruction: null })
+                            });
+
+                            if (!response.ok) {
+                                const errorBody = await response.text();
+                                throw new Error(`Server Error (${response.status}): ${errorBody}`);
+                            }
+
+                            const result = await response.json(); // Parse the { "text": "..." } object
+
+                            if (!result || typeof result.text === 'undefined') {
+                                throw new Error("Invalid response format from server function.");
+                            }
+                            
+                            // *** FIX IS HERE: Parse the 'text' property which contains the JSON array string ***
+                            const useCases = JSON.parse(result.text); 
+                            
                             let html = '<div class="grid md:grid-cols-1 lg:grid-cols-3 gap-6 mt-4">';
                             useCases.forEach(uc => {
                                 html += `<div class="interactive-card rounded-lg p-6 border border-gray-700"><h4 class="font-bold text-lg text-white">${uc.title}</h4><p class="text-sm text-gray-400 mt-2"><strong class="text-gray-300">Problem:</strong> ${uc.problem}</p><p class="text-sm text-gray-400 mt-2"><strong class="text-gray-300">AI Solution:</strong> ${uc.solution}</p></div>`;
                             });
                             html += '</div>';
                             resultsContainer.innerHTML = html;
-                        } catch (e) {
-                            console.error("Failed to parse Gemini response:", e);
-                            resultsContainer.innerHTML = `<p class="text-center text-red-400">Sorry, we couldn't generate use cases at this time. The AI returned an unexpected format.</p>`;
+
+                        } catch (error) {
+                             console.error("Error processing use cases:", error);
+                             let displayError = "Sorry, we couldn't generate use cases at this time.";
+                             if (error.message.includes("JSON")) {
+                                 displayError += " The AI returned an unexpected format.";
+                             } else if (error.message.startsWith("Server Error")){
+                                  displayError = error.message; // Show the server error directly
+                             }
+                            resultsContainer.innerHTML = `<p class="text-center text-red-400">${displayError}</p>`;
+                        } finally {
+                             // Re-enable button (spinner is handled inside callGemini, but good practice)
+                             generateButton.disabled = false; 
                         }
                     });
                 }
+
+
                 
                 const getThreatBriefingBtn = document.getElementById('get-threat-briefing');
                 if(getThreatBriefingBtn) {
