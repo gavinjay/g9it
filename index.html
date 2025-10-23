@@ -402,49 +402,72 @@
                 ]
             };
 
-            const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=';
 
-            async function callGemini(prompt, button, useGrounding = false, systemInstruction = null) {
+                        // REMOVE the const GEMINI_API_URL = '...' line completely
+
+                        async function callGemini(prompt, button, useGrounding = false, systemInstruction = null) {
                 const originalText = button.innerHTML;
                 button.disabled = true;
                 button.innerHTML = '<div class="gemini-spinner"></div>';
                 
-                const payload = {
-                    contents: [{ parts: [{ text: prompt }] }],
-                    safetySettings: [
-                        { "category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE" },
-                        { "category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE" },
-                        { "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE" },
-                        { "category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE" }
-                    ]
+                // Prepare data to send to the Netlify function
+                const requestBody = {
+                    prompt: prompt,
+                    useGrounding: useGrounding,
+                    systemInstruction: systemInstruction
                 };
 
-                if (useGrounding) {
-                    payload.tools = [{ "google_search": {} }];
-                }
-                
-                if (systemInstruction) {
-                    payload.systemInstruction = { parts: [{ text: systemInstruction }] };
-                }
-
                 try {
-                    const response = await fetch(GEMINI_API_URL, {
+                    // Call your Netlify function endpoint
+                    // This is the special path Netlify creates for your function
+                    const response = await fetch('/.netlify/functions/call-gemini', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
+                        body: JSON.stringify(requestBody)
                     });
-                    if (!response.ok) { throw new Error(`API Error: ${response.statusText}`); }
+
+                    if (!response.ok) {
+                        const errorBody = await response.text();
+                         console.error("Netlify Function Error:", response.status, errorBody);
+                        // Try to parse the error if it's JSON from our function
+                        let detail = errorBody;
+                        try { 
+                            const errJson = JSON.parse(errorBody);
+                            detail = errJson.error || errJson.message || errorBody;
+                        } catch(e) { /* Ignore parsing error */ }
+                        throw new Error(`Server Error (${response.status}): ${detail}`);
+                    }
+                    
                     const result = await response.json();
-                    return result.candidates[0].content.parts[0].text;
+                    
+                    if (!result || typeof result.text === 'undefined') {
+                         console.error("Invalid response format from Netlify function:", result);
+                        throw new Error("Received an invalid response format from the server.");
+                    }
+
+                    return result.text; // The Netlify function returns JSON with a 'text' property
+
                 } catch (error) {
-                    console.error("Gemini API call failed:", error);
-                    return "Sorry, there was an error generating the response.";
+                    console.error("Error calling Netlify function:", error);
+                     let errorMessage = "Sorry, there was an error processing your request.";
+                     if (error.message.startsWith("Server Error")) {
+                         errorMessage = error.message; // Use the detailed server error
+                     } else if (error.message.includes("Invalid response format")){
+                          errorMessage = "Received an invalid response from the server.";
+                     }
+                    // Consider showing this error more prominently on the page
+                    return errorMessage; 
                 } finally {
                     button.disabled = false;
                     button.innerHTML = originalText;
                 }
             }
             
+            // ... the rest of your attachEventListeners function and other JS remains the same ...
+
+
+
+
             function renderServices() {
                 const container = document.getElementById('services-container');
                 if (!container) return; 
