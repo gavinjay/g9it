@@ -1,2 +1,8 @@
-    [functions]
-      directory = "netlify/functions/"
+# Tells Netlify where the serverless functions live
+[functions]
+  directory = "netlify/functions/"
+
+# Increase timeout for the Gemini function (default is 10s, max ~26s)
+# Calls with grounding can sometimes take longer.
+[functions."call-gemini"]
+  timeout = 25

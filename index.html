@@ -106,6 +106,19 @@
             margin-right: 1rem;
             color: #93c5fd;
         }
+        .logo-grid img {
+            filter: grayscale(100%) brightness(0.7) contrast(1.2);
+            transition: all 0.3s ease-in-out;
+            max-height: 40px; /* Control logo height */
+            width: auto;
+        }
+        .logo-grid img:hover {
+            filter: grayscale(0%) brightness(1) contrast(1);
+        }
+        /* Basic prose styling for Gemini output */
+        .prose { color: #d1d5db; line-height: 1.6; }
+        .prose strong { color: #fff; font-weight: 600; }
+        .prose br { margin-bottom: 0.5rem; display: block; content: ""; }
     </style>
 </head>
 <body class="antialiased text-gray-300">
@@ -198,11 +211,35 @@
                     <div class="mt-8 max-w-2xl mx-auto grid sm:grid-cols-2 gap-4">
                         <div>
                             <label for="industry" class="block text-sm font-medium text-gray-300">Industry</label>
-                            <select id="industry" name="industry" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-700 bg-gray-800 text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"><option>Finance</option><option>Healthcare</option><option>Energy</option><option>Retail</option><option>Manufacturing</option></select>
+                            <select id="industry" name="industry" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-700 bg-gray-800 text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                                <option>Finance</option>
+                                <option>Healthcare</option>
+                                <option>Energy</option>
+                                <option>Retail & E-commerce</option>
+                                <option>Manufacturing</option>
+                                <option>Technology (SaaS)</option>
+                                <option>Media & Entertainment</option>
+                                <option>Telecommunications</option>
+                                <option>Education</option>
+                                <option>Government</option>
+                                <option>Transportation & Logistics</option>
+                                <option>Hospitality</option>
+                            </select>
                         </div>
                         <div>
                             <label for="department" class="block text-sm font-medium text-gray-300">Department</label>
-                            <select id="department" name="department" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-700 bg-gray-800 text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"><option>Customer Support</option><option>Operations</option><option>Marketing</option><option>Human Resources</option><option>Legal & Compliance</option></select>
+                            <select id="department" name="department" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-700 bg-gray-800 text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                                <option>Customer Support</option>
+                                <option>Operations</option>
+                                <option>Sales & Marketing</option>
+                                <option>Human Resources (HR)</option>
+                                <option>Legal & Compliance</option>
+                                <option>Finance & Accounting</option>
+                                <option>Information Technology (IT)</option>
+                                <option>Research & Development (R&D)</option>
+                                <option>Product Management</option>
+                                <option>Supply Chain</option>
+                            </select>
                         </div>
                     </div>
                      <div class="mt-6 text-center">
@@ -223,7 +260,20 @@
                     <div class="mt-8 max-w-md mx-auto">
                         <div>
                             <label for="threat-industry" class="block text-sm font-medium text-gray-300">Select Industry</label>
-                            <select id="threat-industry" name="threat-industry" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-700 bg-gray-800 text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"><option>Financial Services</option><option>Healthcare</option><option>Energy Sector</option><option>Retail</option><option>Manufacturing</option></select>
+                            <select id="threat-industry" name="threat-industry" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-700 bg-gray-800 text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                                <option>Financial Services</option>
+                                <option>Healthcare</option>
+                                <option>Energy Sector</option>
+                                <option>Retail & E-commerce</option>
+                                <option>Manufacturing</option>
+                                <option>Technology (SaaS)</option>
+                                <option>Media & Entertainment</option>
+                                <option>Telecommunications</option>
+                                <option>Education</option>
+                                <option>Government</option>
+                                <option>Transportation & Logistics</option>
+                                <option>Hospitality</option>
+                            </select>
                         </div>
                     </div>
                      <div class="mt-6 text-center">
@@ -280,14 +330,22 @@
 
         <section id="trust" class="py-20 bg-gray-900 fade-in-section">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center">
-                    <h2 class="text-3xl md:text-4xl font-bold text-white">Certified & Trusted Expertise</h2>
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-white">Trusted Expertise in Leading Platforms</h2>
+                    <p class="mt-4 text-lg text-gray-400">Experienced with the technologies that power your business.</p>
                 </div>
-                <div class="mt-12 grid grid-cols-2 md:grid-cols-4 gap-8 text-center text-gray-400 items-center">
-                    <img src="https://placehold.co/200x100/111827/d1d5db/png?text=AWS+Certified" alt="AWS Certified Logo" class="mx-auto" />
-                    <img src="https://placehold.co/200x100/111827/d1d5db/png?text=GCP+Professional" alt="GCP Professional Logo" class="mx-auto" />
-                    <img src="https://placehold.co/200x100/111827/d1d5db/png?text=GIAC+Certified" alt="GIAC Certified Logo" class="mx-auto" />
-                    <img src="https://placehold.co/200x100/111827/d1d5db/png?text=NERC+CIP" alt="NERC CIP Logo" class="mx-auto" />
+                <div class="grid grid-cols-3 gap-8 logo-grid items-center max-w-3xl mx-auto">
+                    <img src="https://cdn.simpleicons.org/amazonaws/white" alt="AWS Logo" class="mx-auto h-12" />
+                    <img src="https://cdn.simpleicons.org/googlecloud/white" alt="Google Cloud Logo" class="mx-auto h-12" />
+                    <img src="https://cdn.simpleicons.org/microsoftazure/white" alt="Microsoft Azure Logo" class="mx-auto h-12" />
+                </div>
+                 <div class="text-center mt-16 mb-12">
+                    <h3 class="text-2xl font-bold text-white">AI Platforms & Models</h3>
+                </div>
+                 <div class="grid grid-cols-3 gap-8 logo-grid items-center max-w-3xl mx-auto">
+                    <img src="https://cdn.simpleicons.org/openai/white" alt="OpenAI Logo" class="mx-auto h-12" />
+                    <img src="https://cdn.simpleicons.org/googlegemini/white" alt="Google Gemini Logo" class="mx-auto h-12" />
+                    <img src="https://cdn.simpleicons.org/anthropic/white" alt="Anthropic Logo" class="mx-auto h-12" />
                 </div>
             </div>
         </section>
@@ -402,10 +460,8 @@
                 ]
             };
 
-
-                        // REMOVE the const GEMINI_API_URL = '...' line completely
-
-            async function callGemini(prompt, button, useGrounding = false, systemInstruction = null) {
+            // Function call logic remains the same
+             async function callGemini(prompt, button, useGrounding = false, systemInstruction = null) {
                 const originalText = button.innerHTML;
                 button.disabled = true;
                 button.innerHTML = '<div class="gemini-spinner"></div>';
@@ -417,7 +473,6 @@
                 };
 
                 try {
-                    // Call your Netlify function endpoint
                     const response = await fetch('/.netlify/functions/call-gemini', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -435,8 +490,6 @@
                         throw new Error(`Server Error (${response.status}): ${detail}`);
                     }
                     
-                    // Get the raw text response from the Netlify function's body
-                    // The function returns JSON like {"text": "actual_gemini_response"}
                     const result = await response.json(); 
 
                     if (!result || typeof result.text === 'undefined') {
@@ -444,7 +497,6 @@
                         throw new Error("Received an invalid response format from the server function.");
                     }
                     
-                    // Return only the inner text content from Gemini
                     return result.text; 
 
                 } catch (error) {
@@ -455,18 +507,13 @@
                      } else if (error.message.includes("Invalid response format")){
                           errorMessage = "Received an invalid response from the server function.";
                      }
-                    return errorMessage; // Return error message as text
+                    return errorMessage; 
                 } finally {
                     button.disabled = false;
                     button.innerHTML = originalText;
                 }
             }
             
-            // ... the rest of your attachEventListeners function and other JS remains the same ...
-
-
-
-
             function renderServices() {
                 const container = document.getElementById('services-container');
                 if (!container) return; 
@@ -631,72 +678,48 @@
                     generateButton.addEventListener('click', async () => {
                         const industry = document.getElementById('industry').value;
                         const department = document.getElementById('department').value;
-                        // Keep the prompt asking for JSON
                         const prompt = `Act as an expert business and technology consultant. Generate 3 distinct and actionable use cases for Generative AI for the ${department} department in the ${industry} industry. For each use case, provide a title, a brief description of the business problem, and a proposed AI solution. Format the entire response as a single JSON array of objects, where each object has "title", "problem", and "solution" keys. Ensure the output starts directly with '[' and ends directly with ']'. Do not include any introductory text, backticks, or markdown formatting around the JSON array.`;
-                        
                         resultsContainer.innerHTML = '<div class="flex justify-center"><div class="gemini-spinner" style="width: 32px; height: 32px;"></div></div>';
-                        
                         const rawResponseText = await callGemini(prompt, generateButton);
-
                         try {
-                            // Attempt to find and parse JSON within the raw response
-                            const jsonMatch = rawResponseText.match(/\[.*\]/s); // Find text starting with [ and ending with ]
-                            if (!jsonMatch) {
-                                throw new Error("Could not find valid JSON array in the response.");
-                            }
-                            
+                            const jsonMatch = rawResponseText.match(/\[.*\]/s); 
+                            if (!jsonMatch) { throw new Error("Could not find valid JSON array in the response."); }
                             const jsonString = jsonMatch[0];
                             const useCases = JSON.parse(jsonString); 
-                            
                             let html = '<div class="grid md:grid-cols-1 lg:grid-cols-3 gap-6 mt-4">';
                             useCases.forEach(uc => {
                                 html += `<div class="interactive-card rounded-lg p-6 border border-gray-700"><h4 class="font-bold text-lg text-white">${uc.title}</h4><p class="text-sm text-gray-400 mt-2"><strong class="text-gray-300">Problem:</strong> ${uc.problem}</p><p class="text-sm text-gray-400 mt-2"><strong class="text-gray-300">AI Solution:</strong> ${uc.solution}</p></div>`;
                             });
                             html += '</div>';
                             resultsContainer.innerHTML = html;
-
                         } catch (error) {
                              console.error("Error processing use cases:", error, "Raw response:", rawResponseText);
                              let displayError = "Sorry, we couldn't generate use cases at this time.";
-                             if (error.message.includes("JSON") || error.message.includes("Could not find")) {
-                                 displayError += " The AI returned an unexpected format.";
-                             } else if (rawResponseText.startsWith("Server Error")){
-                                  displayError = rawResponseText; // Show the server error directly
-                             } else if (rawResponseText.startsWith("Sorry,")) {
-                                 displayError = rawResponseText; // Show the error from callGemini
-                             }
+                             if (error.message.includes("JSON") || error.message.includes("Could not find")) { displayError += " The AI returned an unexpected format."; } 
+                             else if (rawResponseText.startsWith("Server Error")){ displayError = rawResponseText; } 
+                             else if (rawResponseText.startsWith("Sorry,")) { displayError = rawResponseText; }
                             resultsContainer.innerHTML = `<p class="text-center text-red-400">${displayError}</p>`;
                         }
                     });
                 }
-    
-
-
-
-
                 
                 const getThreatBriefingBtn = document.getElementById('get-threat-briefing');
                 if(getThreatBriefingBtn) {
                     const resultsContainer = document.getElementById('threat-briefing-results');
                     getThreatBriefingBtn.addEventListener('click', async () => {
                         const industry = document.getElementById('threat-industry').value;
-                        // Updated prompt for better formatting
                         const prompt = `Act as a world-class cybersecurity threat analyst. Provide a concise, up-to-the-minute briefing on the top 3 most critical cybersecurity threats currently facing the ${industry} industry. Use Google Search to find the latest information. For each threat, provide a title using bold text (e.g., **Threat Title**) followed by a standard paragraph explaining the threat and its potential business impact. Do NOT use markdown heading syntax like '####'. Ensure clean paragraph breaks between each threat description.`;
                         resultsContainer.innerHTML = '<div class="flex justify-center"><div class="gemini-spinner" style="width: 32px; height: 32px;"></div></div>';
                         const responseText = await callGemini(prompt, getThreatBriefingBtn, true);
-
                          if (responseText.startsWith("Sorry,") || responseText.startsWith("Server Error")) {
                              resultsContainer.innerHTML = `<p class="text-center text-red-400">${responseText}</p>`;
                          } else {
-                            // Render directly, assuming Gemini follows formatting instructions
-                            // Replace markdown bold with HTML strong tags and handle line breaks
-                            resultsContainer.innerHTML = `<div class="prose prose-sm prose-invert max-w-none text-gray-300">${responseText.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white">$1</strong>').replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>')}</div>`;
+                            // Convert markdown bold to strong tags and handle line breaks better
+                            let formattedText = responseText.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white">$1</strong>').replace(/\n\s*\n/g, '<br><br>').replace(/\n/g, '<br>');
+                            resultsContainer.innerHTML = `<div class="prose prose-sm prose-invert max-w-none text-gray-300">${formattedText}</div>`;
                          }
                     });
                 }
-    
-
-
 
                 const testGuardrailBtn = document.getElementById('test-guardrail');
                 if(testGuardrailBtn){
@@ -705,13 +728,15 @@
                     testGuardrailBtn.addEventListener('click', async () => {
                         const userPrompt = promptInput.value;
                         if(!userPrompt) return;
-
                         const systemInstruction = "You are an AI assistant for g9it.com. You must adhere to a strict safety policy. Politely refuse any request that is malicious, unethical, illegal, or promotes harmful activities. Do not provide instructions, code, or details for such requests. Instead, state that you cannot fulfill the request due to safety policies and, if appropriate, explain the potential harm of the requested action in a single sentence.";
-                        
                         resultContainer.classList.remove('hidden');
                         resultContainer.innerHTML = '<div class="flex justify-center"><div class="gemini-spinner"></div></div>';
                         const responseText = await callGemini(userPrompt, testGuardrailBtn, false, systemInstruction);
-                        resultContainer.innerHTML = responseText;
+                         if (responseText.startsWith("Sorry,") || responseText.startsWith("Server Error")) {
+                             resultContainer.innerHTML = `<p class="text-red-400">${responseText}</p>`;
+                         } else {
+                            resultContainer.innerHTML = responseText;
+                         }
                     });
                 }
             }
